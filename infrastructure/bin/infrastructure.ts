@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
-import { VpcStack } from "../lib/VPCstack";
+import { InfrastructureStack } from "../lib/InfrastructureStack";
 
 const app = new cdk.App();
 
-const vpcStack = new VpcStack(app, "VpcStack");
+new InfrastructureStack(app, "InfrastructureStack", {
+  /* optional props */
+});

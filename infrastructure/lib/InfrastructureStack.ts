@@ -10,13 +10,14 @@ export class InfrastructureStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // Create a new VPC with 2 Availability Zones
+    //Create a new VPC with 2 Availability Zones
     const vpc = new ec2.Vpc(this, "Vpc", {
       maxAzs: 2,
 
+      //create one nat gateway
       natGateways: 1,
 
-      // Define subnets to be created in the VPC
+      //One public and one private subnet per AZ
       subnetConfiguration: [
         {
           name: "Public",
@@ -32,6 +33,8 @@ export class InfrastructureStack extends cdk.Stack {
     });
 
     //Sceurity Groups
+
+    //ALB Secuirty Group
     const albSG = new ec2.SecurityGroup(this, "ALBSecurityGroup", {
       vpc,
       description: "Allow HTTP from internet",
@@ -61,15 +64,15 @@ export class InfrastructureStack extends cdk.Stack {
         version: rds.MysqlEngineVersion.VER_8_0,
       }),
       vpc: vpc,
-      vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
+      vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS }, // private placement
       instanceType: ec2.InstanceType.of(
         ec2.InstanceClass.BURSTABLE3,
         ec2.InstanceSize.MICRO
       ),
       allocatedStorage: 20,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
-      securityGroups: [rdsSG],
-      credentials: rds.Credentials.fromGeneratedSecret("admin"),
+      securityGroups: [rdsSG], // only EC2 SG allowed
+      credentials: rds.Credentials.fromGeneratedSecret("admin"), // secrets manager
       databaseName: "wordpress",
     });
 
@@ -136,18 +139,19 @@ export class InfrastructureStack extends cdk.Stack {
     );
 
     //Public Application Load Balancer
-
     const alb = new elbv2.ApplicationLoadBalancer(this, "ALB", {
       vpc,
       internetFacing: true,
       securityGroup: albSG,
     });
-
+     
+    //Add a listener to the ALB on port 80 (HTTP)
     const listener = alb.addListener("Listener", {
       port: 80,
       open: true,
     });
-
+     
+    //Forward traffic to the WordPress EC2 instance
     listener.addTargets("WPTargets", {
       port: 80,
       targets: [new targets.InstanceTarget(instance1)],

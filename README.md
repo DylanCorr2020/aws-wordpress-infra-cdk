@@ -121,7 +121,14 @@ On first boot, the EC2 instance:
 
 ```bash
 git clone https://github.com/DylanCorr2020/aws-wordpress-infra-cdk.git
+
+```
+
+### Deploy to AWS
+
+```bash
 cd aws-wordpress-infra-cdk
 cd infrastructure
 cdk deploy
+
 ```

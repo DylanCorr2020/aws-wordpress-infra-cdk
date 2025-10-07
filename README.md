@@ -8,15 +8,15 @@ The setup uses **best practices** like private subnets, managed RDS, Secrets Man
 
 ## ✨ Features
 
-- 🌐 **Application Load Balancer (ALB)** in a public subnet, routing traffic to WordPress.
-- 🖥 **EC2 instance** running WordPress inside a private subnet (not exposed to the internet).
-- 🗄 **Amazon RDS (MySQL)** in a private subnet for secure database hosting.
-- 🔑 **AWS Secrets Manager** for secure credential storage (no hardcoding passwords).
-- 🔧 **EC2 User Data** script for automatic WordPress + Apache + PHP bootstrapping.
-- 📦 **NAT Gateway** for private instances to fetch updates securely.
-- 🛡 **Security Groups** carefully configured (ALB → EC2 → RDS).
-- 🖥 **AWS Systems Manager (SSM)** Session Manager enabled (no need for SSH keys).
-- 🧹 **Infrastructure as Code (IaC)** with AWS CDK for reproducibility.
+- **Application Load Balancer (ALB)** in a public subnet, routing traffic to WordPress.
+- **EC2 instance** running WordPress inside a private subnet (not exposed to the internet).
+- **Amazon RDS (MySQL)** in a private subnet for secure database hosting.
+- **AWS Secrets Manager** for secure credential storage (no hardcoding passwords).
+- **EC2 User Data** script for automatic WordPress + Apache + PHP bootstrapping.
+- **NAT Gateway** for private instances to fetch updates securely.
+- **Security Groups** carefully configured (ALB → EC2 → RDS).
+- **AWS Systems Manager (SSM)** Session Manager enabled (no need for SSH keys).
+- **Infrastructure as Code (IaC)** with AWS CDK for reproducibility.
 
 ---
 
@@ -24,14 +24,14 @@ The setup uses **best practices** like private subnets, managed RDS, Secrets Man
 
 TechHealth Inc, a healthcare technology startup, originally spun up their **WordPress-based patient portal** directly via the AWS Console.
 
-⚠️ Over time, this became **hard to manage**:
+Over time, this became **hard to manage**:
 
 - All resources lived in **public subnets** (poor security).
 - **Manual Security Groups** led to inconsistent rules.
 - No version control or repeatable deployments.
 - Infrastructure was **not scalable** and lacked documentation.
 
-➡️ The solution? **Migrate everything to Infrastructure as Code (IaC) with AWS CDK**.
+The solution? **Migrate everything to Infrastructure as Code (IaC) with AWS CDK**.
 
 ---
 
@@ -39,25 +39,23 @@ TechHealth Inc, a healthcare technology startup, originally spun up their **Word
 
 Here’s what the new setup looks like ✅
 
-- 🌍 **ALB** in the public subnet, handling HTTP requests.
-- 🔒 **EC2 instance** (WordPress) in private subnet, hidden from direct internet access.
-- 📡 **NAT Gateway** allows EC2 to fetch updates securely.
-- 🗄 **RDS MySQL** database in private subnet (only EC2 can access it).
-- 🔑 **Secrets Manager** provides credentials dynamically.
-- 🖥 **SSM Session Manager** replaces SSH for secure admin access.
+- **ALB** in the public subnet, handling HTTP requests.
+- **EC2 instance** (WordPress) in private subnet, hidden from direct internet access.
+- **NAT Gateway** allows EC2 to fetch updates securely.
+- **RDS MySQL** database in private subnet (only EC2 can access it).
+- **Secrets Manager** provides credentials dynamically.
+- **SSM Session Manager** replaces SSH for secure admin access.
 
 📊 **Architecture Diagram:**  
-_(Insert your diagram screenshot here for visual impact)_
-
----
+![Image](https://github.com/user-attachments/assets/a02391ce-5720-4766-8257-f9cf980c6cb8)
 
 ## 🛠 Deployment with CDK
 
 ### 🕸 Networking (VPC, Subnets, NAT Gateway)
 
-- 2️⃣ Availability Zones for resilience.
-- 🌐 Public Subnets → ALB & NAT Gateway.
-- 🔒 Private Subnets with egress → EC2 & RDS.
+- Availability Zones for resilience.
+- Public Subnets → ALB & NAT Gateway.
+- Private Subnets with egress → EC2 & RDS.
 - NAT Gateway ensures private instances can download updates securely.
 
 ### 🛡 Security Groups
@@ -107,7 +105,7 @@ On first boot, the EC2 instance:
 
 👉 Check out my detailed Medium post where I break down the **client scenario, architecture, and full CDK code snippets**:
 
-🔗 [Secure WordPress Deployment on AWS using CDK](https://medium.com/your-link-here)
+🔗 [Secure WordPress Deployment on AWS using CDK](https://medium.com/@dylancorr.g/498c1e34da2d)
 
 ---
 
@@ -124,4 +122,6 @@ On first boot, the EC2 instance:
 ```bash
 git clone https://github.com/DylanCorr2020/aws-wordpress-infra-cdk.git
 cd aws-wordpress-infra-cdk
+cd infrastructure
+cdk deploy
 ```
